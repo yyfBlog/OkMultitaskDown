@@ -2,8 +2,6 @@ package com.yf.down.app;
 
 import android.app.Application;
 
-import com.yf.lib_okdown.db.DBHelper;
-
 /**
  * @Description: 描述
  * @author; yyf
@@ -13,6 +11,5 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        DBHelper.init(this);
     }
 }
