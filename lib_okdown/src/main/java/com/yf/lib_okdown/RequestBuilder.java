@@ -55,19 +55,41 @@ public abstract class RequestBuilder extends BaseBuilder {
     public abstract Request getRequest(String url, Map<String, String> headers, Map<String, String> params);
 
     @Override
-    public void enqueue(StringCallBack stringCallBack) {
+    public void enqueue(final StringCallBack stringCallBack) {
         Request request = getRequest(getUrl(), getHeaders(), getParams());
         Call call = OkManager.getInstance().getClient().newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                returnFailure(e, stringCallBack);
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                returnResponse(response, stringCallBack);
             }
         });
     }
 
+
+    private void returnResponse(Response response, StringCallBack callBack) {
+        try {
+            if (callBack != null) {
+                if (response.isSuccessful()) {
+                    callBack.onSuccess(response.body().string());
+                } else {
+                    callBack.onFail(response.body().string(), null);
+                }
+            }
+        } catch (IOException e) {
+            returnFailure(e, callBack);
+        }
+    }
+
+    private void returnFailure(Exception e, StringCallBack callBack) {
+        if (callBack != null) {
+            callBack.onFail("网络异常", e);
+        }
+    }
 
 }
