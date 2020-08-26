@@ -1,54 +1,73 @@
 package com.yf.lib_okdown;
 
-import android.net.Uri;
 import android.util.Log;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 
-import okhttp3.Headers;
+import java.io.IOException;
+import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Request;
-import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * @Description: 描述
  * @author; yyf
  * @CreateDate:2020/8/25 16:19
  */
-public class RequestBuilder {
+public abstract class RequestBuilder extends BaseBuilder {
+    private String url;
+    private Map<String, String> headers;
+    private Map<String, String> params;
 
-    public Request getRequest(String url, Map<String, String> headers, Map<String, String> params) {
-        Request.Builder requestBuilder = new Request.Builder();
-        if (url == null || params == null || params.isEmpty()) {
-            return requestBuilder.url(url).get().build();
-        }
-        Uri.Builder builder = Uri.parse(url).buildUpon();
-        Set<String> keys = params.keySet();
-        Iterator<String> iterator = keys.iterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            builder.appendQueryParameter(key, params.get(key));
-        }
-        Headers.Builder headerBuilder = new Headers.Builder();
-        if (headers != null) {
-            for (String key : headers.keySet()) {
-                headerBuilder.add(key, headers.get(key));
+    public String getUrl() {
+        return url;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    @Override
+    public BaseBuilder url(String url) {
+        this.url = url;
+        return this;
+    }
+
+    @Override
+    public BaseBuilder header(Map<String, String> headers) {
+        this.headers = headers;
+        return this;
+    }
+
+    @Override
+    public BaseBuilder params(Map<String, String> params) {
+        this.params = params;
+        return this;
+    }
+
+    public abstract Request getRequest(String url, Map<String, String> headers, Map<String, String> params);
+
+    @Override
+    public void enqueue(StringCallBack stringCallBack) {
+        Request request = getRequest(getUrl(), getHeaders(), getParams());
+        Call call = OkManager.getInstance().getClient().newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
             }
-        }
-        return requestBuilder.url(builder.build().toString()).get().headers(headerBuilder.build()).build();
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            }
+        });
     }
 
 
-    public Request postJsonRequest(String url, Map<String, String> headers, String jsonParams) {
-        RequestBody body = RequestBody.Companion.create(jsonParams, DataMediaType.JSON);
-        final Request.Builder requestBuilder = new Request.Builder();
-        Headers.Builder headerBuilder = new Headers.Builder();
-        if (headers != null) {
-            for (String key : headers.keySet()) {
-                headerBuilder.add(key, headers.get(key));
-            }
-        }
-        return requestBuilder.url(url).post(body).headers(headerBuilder.build()).build();
-    }
 }

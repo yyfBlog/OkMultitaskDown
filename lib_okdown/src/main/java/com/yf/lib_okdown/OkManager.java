@@ -2,17 +2,12 @@ package com.yf.lib_okdown;
 
 import android.util.Log;
 
-import org.jetbrains.annotations.NotNull;
+import com.yf.lib_okdown.request.GetRequest;
+import com.yf.lib_okdown.request.PostJsonRequest;
 
-import java.io.IOException;
 import java.util.Map;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 
@@ -51,59 +46,23 @@ public class OkManager {
         client = builder.build();
     }
 
+    public OkHttpClient getClient() {
+        return client;
+    }
+
     /**
      * post 请求
      */
-    public void postJson(String url,Map<String, String> headers, String paramsJson, final StringCallBack callBack) {
-        RequestBuilder postJsonRequest=new RequestBuilder();
-        Call call = client.newCall(postJsonRequest.postJsonRequest(url,headers,paramsJson));
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                if (callBack != null) {
-                    callBack.onFail("网络异常", e);
-                }
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    callBack.onSuccess(response.body().toString());
-                } else {
-                    callBack.onFail("网络异常", null);
-                }
-            }
-        });
+    public RequestBuilder postJson() {
+        PostJsonRequest postJsonRequest = new PostJsonRequest();
+        return postJsonRequest;
     }
 
     /**
      * get 请求
      */
-    public void get(String url, Map<String, String> headers, Map<String, String> params, final StringCallBack callBack) {
-        RequestBuilder request = new RequestBuilder();
-        Call call = client.newCall(request.getRequest(url, headers, params));
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.d(TAG, "onFailure: " + e.getMessage());
-                if (callBack != null) {
-                    callBack.onFail("网络异常", e);
-                }
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                Log.d(TAG, "onResponse: " + response.body().string());
-                if (response.isSuccessful()) {
-                    if (callBack != null) {
-                        callBack.onSuccess(response.body().toString());
-                    }
-                } else {
-                    if (callBack != null) {
-                        callBack.onFail(response.body().toString(), null);
-                    }
-                }
-            }
-        });
+    public GetRequest get() {
+        GetRequest getRequest = new GetRequest();
+        return getRequest;
     }
 }
