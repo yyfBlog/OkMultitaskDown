@@ -7,6 +7,8 @@ import android.util.Log;
 import com.yf.lib_okdown.OkManager;
 import com.yf.lib_okdown.StringCallBack;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
         String url="http://dev2.grgfast.com.cn:8001/eqcloud/polling/getTs";
         Map<String,String> params=new HashMap<>();
         params.put("key","bbb");
-        OkManager.getInstance().get(url,params, new StringCallBack() {
+        Map<String,String> header=new HashMap<>();
+        header.put("token","ccc");
+        OkManager.getInstance().get(url,header,params, new StringCallBack() {
             @Override
             public void onSuccess(String msg) {
                 Log.d(TAG, "onSuccess: "+msg);
@@ -45,6 +49,19 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onFail: "+msg+"  ");
             }
         });
+
+//        String json="{\"aaa\":\"bbb\"}";
+//        OkManager.getInstance().postJson(url,header,json, new StringCallBack() {
+//            @Override
+//            public void onSuccess(String msg) {
+//                Log.d(TAG, "onSuccess: "+msg);
+//            }
+//
+//            @Override
+//            public void onFail(String msg, Exception e) {
+//                Log.d(TAG, "onFail: "+msg+"  ");
+//            }
+//        });
     }
 
     @Override
