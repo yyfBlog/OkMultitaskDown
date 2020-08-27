@@ -17,7 +17,7 @@ OkManager.getInstance().get().url(url2).enqueue(new FileCallBack(Environment.get
         });
 ```
 get请求
-``
+```
 OkManager.getInstance().get().url(url2).header(header).params(params).enqueue(new StringCallBack() {
            @Override
            public void onSuccess(String msg) {
@@ -28,4 +28,4 @@ OkManager.getInstance().get().url(url2).header(header).params(params).enqueue(ne
                Log.d(TAG, "onFail: "+msg);
            }
        });
-``
+```
