@@ -1,11 +1,13 @@
 package com.yf.down.app;
 
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.yf.lib_okdown.OkManager;
-import com.yf.lib_okdown.StringCallBack;
+import com.yf.lib_okdown.callback.FileCallBack;
+import com.yf.lib_okdown.callback.StringCallBack;
 
 
 import java.util.HashMap;
@@ -38,6 +40,25 @@ public class MainActivity extends AppCompatActivity {
         Map<String,String> header=new HashMap<>();
         header.put("token","ccc");
 
+        Log.d(TAG, "onCreate: "+Environment.getExternalStorageDirectory().getPath());
+        OkManager.getInstance().get().url(url2).enqueue(new FileCallBack(Environment.getExternalStorageDirectory().getPath()) {
+            @Override
+            public void onProgress(long totalLength, long alreadyDownLength) {
+                Log.d(TAG, "onProgress: totalLength:"+totalLength+"   alreadyDownLength:"+alreadyDownLength);
+            }
+
+            @Override
+            public void onSuccess(String msg) {
+                Log.d(TAG, "onSuccess: "+msg);
+            }
+
+            @Override
+            public void onFail(String msg, Exception e) {
+                Log.d(TAG, "onFail: "+msg);
+            }
+
+        });
+
 //        OkManager.getInstance().postJson().url(url).header(header).params(params).enqueue(new StringCallBack() {
 //            @Override
 //            public void onSuccess(String msg) {
@@ -50,18 +71,17 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-
-       OkManager.getInstance().get().url(url).header(header).params(params).enqueue(new StringCallBack() {
-           @Override
-           public void onSuccess(String msg) {
-               Log.d(TAG, "onSuccess: "+msg);
-           }
-
-           @Override
-           public void onFail(String msg, Exception e) {
-               Log.d(TAG, "onFail: "+msg);
-           }
-       });
+//       OkManager.getInstance().get().url(url2).header(header).params(params).enqueue(new StringCallBack() {
+//           @Override
+//           public void onSuccess(String msg) {
+//               Log.d(TAG, "onSuccess: "+msg);
+//           }
+//
+//           @Override
+//           public void onFail(String msg, Exception e) {
+//               Log.d(TAG, "onFail: "+msg);
+//           }
+//       });
     }
 
     @Override

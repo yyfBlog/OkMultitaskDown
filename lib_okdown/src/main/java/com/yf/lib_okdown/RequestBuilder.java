@@ -1,6 +1,6 @@
 package com.yf.lib_okdown;
 
-import android.util.Log;
+import com.yf.lib_okdown.callback.BaseCallBack;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -55,28 +55,28 @@ public abstract class RequestBuilder extends BaseBuilder {
     public abstract Request getRequest(String url, Map<String, String> headers, Map<String, String> params);
 
     @Override
-    public void enqueue(final StringCallBack stringCallBack) {
+    public void enqueue(final BaseCallBack callBack) {
         Request request = getRequest(getUrl(), getHeaders(), getParams());
         Call call = OkManager.getInstance().getClient().newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                returnFailure(e, stringCallBack);
+                returnFailure(e, callBack);
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
-                returnResponse(response, stringCallBack);
+                returnResponse(response, callBack);
             }
         });
     }
 
 
-    private void returnResponse(Response response, StringCallBack callBack) {
+    private void returnResponse(Response response, BaseCallBack callBack) {
         try {
             if (callBack != null) {
                 if (response.isSuccessful()) {
-                    callBack.onSuccess(response.body().string());
+                    callBack.analysisResponse(response);
                 } else {
                     callBack.onFail(response.body().string(), null);
                 }
@@ -86,10 +86,9 @@ public abstract class RequestBuilder extends BaseBuilder {
         }
     }
 
-    private void returnFailure(Exception e, StringCallBack callBack) {
+    private void returnFailure(Exception e, BaseCallBack callBack) {
         if (callBack != null) {
             callBack.onFail("网络异常", e);
         }
     }
-
 }

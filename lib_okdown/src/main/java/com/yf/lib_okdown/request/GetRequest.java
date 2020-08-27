@@ -2,14 +2,8 @@ package com.yf.lib_okdown.request;
 
 import android.net.Uri;
 
-import com.yf.lib_okdown.DataMediaType;
-import com.yf.lib_okdown.OkManager;
 import com.yf.lib_okdown.RequestBuilder;
-import com.yf.lib_okdown.StringCallBack;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;

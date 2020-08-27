@@ -1,6 +1,11 @@
 package com.yf.lib_okdown;
 
+
+
+import com.yf.lib_okdown.callback.BaseCallBack;
+
 import java.util.Map;
+
 
 /**
  * @Description: 描述
@@ -14,5 +19,6 @@ public abstract class BaseBuilder {
 
     public abstract BaseBuilder params(Map<String,String> params);
 
-    public abstract void enqueue(StringCallBack stringCallBack);
+    public abstract void enqueue(BaseCallBack CallBack);
+
 }

@@ -2,6 +2,7 @@ package com.yf.lib_okdown;
 
 import android.util.Log;
 
+import com.yf.lib_okdown.request.FileRequest;
 import com.yf.lib_okdown.request.GetRequest;
 import com.yf.lib_okdown.request.PostJsonRequest;
 
@@ -65,6 +66,4 @@ public class OkManager {
         GetRequest getRequest = new GetRequest();
         return getRequest;
     }
-
-
 }

@@ -9,4 +9,5 @@ import okhttp3.MediaType;
  */
 public class DataMediaType {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public static MediaType MEDIA_TYPE_STREAM = MediaType.parse("application/octet-stream");
 }
